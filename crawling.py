@@ -4,7 +4,7 @@ login_chk:null
 LOGIN_SN:null
 LOGIN_NAME:null
 indexName:news
-keyword:JYP
+keyword:양민철 KBS
 byLine:
 searchScope:1
 searchFtr:1
@@ -61,15 +61,24 @@ html = response.text
 soup = BeautifulSoup(html, 'html.parser')
 certifi = ssl.SSLContext()
 
+result = set()
+
 for tag in soup.select('.resultList li h3'):
     doc_id = tag['id'].replace('news_', '')
     doc_url = 'https://www.bigkinds.or.kr/news/detailView.do?docId={}&returnCnt=1'.format(doc_id)
     print(tag.text.strip(), doc_url)
+    result.add(tag.text.strip())
     try :
         with urllib.request.urlopen(doc_url, context=certifi) as url:
             data = json.loads(url.read().decode())
             #print(data.get('TITLE'))
+
             print(data.get('detail').get('CONTENT'))
     except HTTPError:
         print('내용이 없습니다')
         continue
+
+print(result)
+
+for re in result:
+    print(re)
